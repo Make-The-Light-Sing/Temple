@@ -1,29 +1,8 @@
 #include <FastSPI_LED2.h>
-#include <fastspi.h>
-#include <controller.h>
-
 #include <PIRSensor.h>
 #include <HCSR04UltraSonic.h>
 #include <Color.h>
-
-/**
- * RGB Led test plugged on PWM output of Arduino Mega 2560
- */
-#define LED_RED    44
-#define LED_GREEN  45
-#define LED_BLUE   46
-
-#define TRIGGER_PIN 9
-#define ECHO_PIN    8
-
-#define PIR_FRONT_PIN 3
-#define PIR_BACK_PIN  2
-
-#define LEDSTRIP_PIN 6
-
-#define PIR_LOCK_DURATION 5000
-
-#define NUM_LEDS 21
+#include "Config.h"
 
 //#define DEBUG
 
