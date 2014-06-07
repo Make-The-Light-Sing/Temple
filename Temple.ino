@@ -51,7 +51,7 @@ void loop()
         
         memset(leds, 0,  NUM_LEDS * sizeof(struct CRGB));
         // Get CRGB value from index in an RGB wheel, index is the distance
-        c.Wheel(distance % 384);
+        c.Wheel(distance);
         
         // Output color
         if (PIRFront.hasMovement() || PIRBack.hasMovement()) {
