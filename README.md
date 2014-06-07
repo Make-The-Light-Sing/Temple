@@ -16,4 +16,5 @@ Requirements
 This project require some other libraries available on github too :
 
 - Color : This library contain Struct and method used to manipulate RGB colors : https://github.com/jeckel/arduino-color-lib
-- HCSR04 : This library contain an Object used to manipulate the HC-SR04 Ultrasonic sensor to read distances : https://github.com/jeckel/arduino-hcsr04-lib
+- HCSR04 : This library contain a class used to manipulate the HC-SR04 Ultrasonic sensor to read distances : https://github.com/jeckel/arduino-hcsr04-lib
+- PIRSensor : This library contain a Class used to manipulate the PIR motion sensor to reactiv with movments : https://github.com/jeckel/arduino-pirsensor-lib
