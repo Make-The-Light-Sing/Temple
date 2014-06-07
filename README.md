@@ -19,3 +19,4 @@ This project require some other libraries available on github too :
 - HCSR04 : This library contain a class used to manipulate the HC-SR04 Ultrasonic sensor to read distances : https://github.com/jeckel/arduino-hcsr04-lib
 - PIRSensor : This library contain a Class used to manipulate the PIR motion sensor to reactiv with movments : https://github.com/jeckel/arduino-pirsensor-lib
 - FastSPI_LED2 (fork) : A fork from an old version of the FastSPI LED library : https://github.com/jeckel/arduino-fastpsi_led-lib
+- Segment : This library allows to split a LEDstrip into different segments, defining for each segment a different configuration and different effects : https://github.com/jeckel/arduino-segment-lib
