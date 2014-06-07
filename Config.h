@@ -28,11 +28,20 @@
 struct CRGB leds[NUM_LEDS];
 
 T_SegmentConfig seg_config[NB_SEGMENT] = {
-        { leds,       10},
-        { leds + 10,  11},
-    };
+    { leds,       10},
+    { leds + 10,  11},
+};
 
 T_EffectConfig effect_config[NB_SEGMENT] = {
-        { CRed,   DOWN, Pulse },
-        { CBlue,  UP,   Wave },
+    { CRed,   DOWN, Pulse },
+    { CBlue,  UP,   Wave },
+};
+
+#define NB_SEGMENT_OFF    1
+T_SegmentConfig seg_config_off[NB_SEGMENT_OFF] = {
+    { leds,       NUM_LEDS}
+};
+
+T_EffectConfig effect_config_off[NB_SEGMENT] = {
+    { CWhite, DOWN, Spark }
 };
