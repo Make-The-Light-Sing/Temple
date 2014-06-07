@@ -15,11 +15,12 @@
 #define PIR_FRONT_PIN 3
 #define PIR_BACK_PIN  2
 
-#define DEBUG
+#define PIR_LOCK_DURATION 5000
+//#define DEBUG
 
 HCSR04UltraSonic HCSR04(TRIGGER_PIN, ECHO_PIN);
-PIRSensor        PIRFront(PIR_FRONT_PIN);
-PIRSensor        PIRBack(PIR_BACK_PIN);
+PIRSensor        PIRFront(PIR_FRONT_PIN, PIR_LOCK_DURATION);
+PIRSensor        PIRBack(PIR_BACK_PIN, PIR_LOCK_DURATION);
 
 /**
  * Init
@@ -47,16 +48,17 @@ void loop()
     int distance = HCSR04.readDistance();
     #ifdef DEBUG
         Serial.println(distance);
-        if (PIRFront.hasMovement()) {
+        if (PIRFront.triggered()) {
             Serial.println("Movement in front sensor");
         }
-        if (PIRBack.hasMovement()) {
+        if (PIRBack.triggered()) {
             Serial.println("Movement in back sensor");
         }
     #endif
         
     // Get CRGB value from index in an RGB wheel, index is the distance
     c.Wheel(distance % 384);
+    
     // Output color
     if (PIRFront.hasMovement() || PIRBack.hasMovement()) {
         analogWrite(LED_RED, 255 - c.r * 2);
