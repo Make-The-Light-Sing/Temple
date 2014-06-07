@@ -2,6 +2,7 @@
 #include <PIRSensor.h>
 #include <HCSR04UltraSonic.h>
 #include <Color.h>
+#include <Segment.h>
 #include "Config.h"
 
 //#define DEBUG
@@ -10,7 +11,7 @@ HCSR04UltraSonic HCSR04(TRIGGER_PIN, ECHO_PIN);
 PIRSensor        PIRFront(PIR_FRONT_PIN, PIR_LOCK_DURATION);
 PIRSensor        PIRBack(PIR_BACK_PIN, PIR_LOCK_DURATION);
 TM1809Controller800Mhz<LEDSTRIP_PIN> LED;
-struct CRGB leds[NUM_LEDS];
+SegmentCollection segments;
 
 /**
  * Init
@@ -20,7 +21,14 @@ void setup()
     pinMode(LED_RED, OUTPUT);
     pinMode(LED_GREEN, OUTPUT);
     pinMode(LED_BLUE, OUTPUT);
+    
+    Effect_Factory factory;
     LED.init();
+    
+    for(unsigned int i = 0; i < NB_SEGMENT; i++) {
+        segments.addSegment(new Segment(seg_config[i], factory.createEffect(effect_config[i])));
+    }
+    segments.init();
     
     #ifdef DEBUG
         Serial.begin(9600);
@@ -48,8 +56,6 @@ void loop()
             }
         #endif
         
-        
-        memset(leds, 0,  NUM_LEDS * sizeof(struct CRGB));
         // Get CRGB value from index in an RGB wheel, index is the distance
         c.Wheel(distance);
         
@@ -58,14 +64,19 @@ void loop()
             analogWrite(LED_RED, 255 - c.r * 2);
             analogWrite(LED_BLUE, 255 - c.b * 2);
             analogWrite(LED_GREEN, 255 - c.g * 2);
-            leds[iLed] = c;
+            for(unsigned int i = 0; i < NB_SEGMENT; i++) {
+                segments.setSegmentColor(i, c);
+            }
+            segments.preStep();
+            LED.showRGB((unsigned char *) leds, NUM_LEDS);
+            segments.postStep();
         } else {
             analogWrite(LED_RED, 255);
             analogWrite(LED_BLUE, 255);
             analogWrite(LED_GREEN, 255);
-            leds[iLed] = CBlack;
+            memset(leds, 0,  NUM_LEDS * sizeof(struct CRGB));
+            LED.showRGB((unsigned char *) leds, NUM_LEDS);
         }
-        LED.showRGB((byte*)leds, NUM_LEDS);
         // Delay
         delay(20);
     }
