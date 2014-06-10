@@ -25,14 +25,19 @@ void setup()
     pinMode(LED_GREEN, OUTPUT);
     pinMode(LED_BLUE, OUTPUT);
     
+    pinMode(PIN_SELECT_1, INPUT);
+    pinMode(PIN_SELECT_2, INPUT);
+    
+//    setTotemTest2(leds);
+    setConfiguration(leds);
+    
     Effect_Factory factory;
     LED.init();
-    
-    for(unsigned int i = 0; i < NB_SEGMENT; i++) {
-        segments.addSegment(new Segment(seg_config[i], factory.createEffect(effect_config[i])));
+    for (unsigned int i = 0; i < totem.config_on.size; i++) {
+        segments.addSegment(new Segment(totem.config_on.segments[i], factory.createEffect(totem.config_on.effects[i])));
     }
-    for(unsigned int i = 0; i < NB_SEGMENT_OFF; i++) {
-        segmentsOff.addSegment(new Segment(seg_config_off[i], factory.createEffect(effect_config_off[i])));
+    for (unsigned int i = 0; i < totem.config_off.size; i++) {
+        segmentsOff.addSegment(new Segment(totem.config_off.segments[i], factory.createEffect(totem.config_off.effects[i])));
     }
     segments.init();
     segmentsOff.init();
@@ -70,11 +75,11 @@ void loop()
         analogWrite(LED_RED, 255 - c.r * 2);
         analogWrite(LED_BLUE, 255 - c.b * 2);
         analogWrite(LED_GREEN, 255 - c.g * 2);
-        for(unsigned int i = 0; i < NB_SEGMENT; i++) {
+        for(unsigned int i = 0; i < totem.config_on.size; i++) {
             segments.setSegmentColor(i, c);
         }
         segments.preStep();
-        LED.showRGB((unsigned char *) leds, NUM_LEDS);
+        LED.showRGB((unsigned char *) leds, totem.nb_leds);
         segments.postStep();
         active = true;
     } else {
@@ -82,13 +87,85 @@ void loop()
         analogWrite(LED_BLUE, 255);
         analogWrite(LED_GREEN, 255);
         if (active == true) {
-            memset(leds, 0, NUM_LEDS * sizeof(struct CRGB));
+            memset(leds, 0, totem.nb_leds * sizeof(struct CRGB));
             active = false;
         }
         segmentsOff.preStep();
-        LED.showRGB((unsigned char *) leds, NUM_LEDS);
+        LED.showRGB((unsigned char *) leds, totem.nb_leds);
         segmentsOff.postStep();
     }
     // Delay
     delay(20);
+}
+
+void setConfiguration(CRGB* leds)
+{
+    if (digitalRead(PIN_SELECT_1) == HIGH)
+    {
+        setTotemTest1(leds);
+    } else {
+        setTotemTest2(leds);
+    }
+}
+
+/**
+ * Totem with square base
+ */
+void setTotemTest1(CRGB* leds)
+{
+    unsigned char nb_segment_on  = 2;
+    unsigned char nb_leds        = 21;
+    unsigned char nb_segment_off = 1;
+
+    segments_on = (T_SegmentConfig *) malloc(nb_segment_on * sizeof(T_SegmentConfig));
+    segments_on[0] = {leds, 10};
+    segments_on[1] = {leds + 10, 11};
+    
+    effects_on = (T_EffectConfig *) malloc(nb_segment_on * sizeof(T_EffectConfig));
+    effects_on[0] = {CWhite, UP, Wave};
+    effects_on[1] = {CWhite, DOWN, Wave};
+    
+    segments_off = (T_SegmentConfig *) malloc(nb_segment_off * sizeof(T_SegmentConfig));
+    segments_off[0] = {leds, 21};
+    
+    effects_off = (T_EffectConfig *) malloc(nb_segment_off * sizeof(T_EffectConfig));
+    effects_off[0] = {CWhite, DOWN, Spark};
+
+    totem = {
+        LEDSTRIP_PIN,
+        nb_leds,
+        { nb_segment_on, segments_on, effects_on},
+        { nb_segment_off, segments_off, effects_off }
+    };
+}
+
+/**
+ * Totem with square base
+ */
+void setTotemTest2(CRGB* leds)
+{
+    unsigned char nb_segment_on  = 2;
+    unsigned char nb_leds        = 21;
+    unsigned char nb_segment_off = 1;
+
+    segments_on = (T_SegmentConfig *) malloc(nb_segment_on * sizeof(T_SegmentConfig));
+    segments_on[0] = {leds, 10};
+    segments_on[1] = {leds + 10, 11};
+    
+    effects_on = (T_EffectConfig *) malloc(nb_segment_on * sizeof(T_EffectConfig));
+    effects_on[0] = {CWhite, DOWN, Wave};
+    effects_on[1] = {CWhite, UP, Wave};
+    
+    segments_off = (T_SegmentConfig *) malloc(nb_segment_off * sizeof(T_SegmentConfig));
+    segments_off[0] = {leds, 21};
+    
+    effects_off = (T_EffectConfig *) malloc(nb_segment_off * sizeof(T_EffectConfig));
+    effects_off[0] = {CWhite, DOWN, Wave};
+
+    totem = {
+        LEDSTRIP_PIN,
+        nb_leds,
+        { nb_segment_on, segments_on, effects_on},
+        { nb_segment_off, segments_off, effects_off }
+    };
 }

@@ -24,24 +24,29 @@
 #define LEDSTRIP_PIN      6
 #define NUM_LEDS          21
 #define NB_SEGMENT        2
+#define NB_SEGMENT_OFF    1
+
+#define PIN_SELECT_1      4
+#define PIN_SELECT_2      5
 
 struct CRGB leds[NUM_LEDS];
 
-T_SegmentConfig seg_config[NB_SEGMENT] = {
-    { leds,       10},
-    { leds + 10,  11},
+typedef struct T_Totem {
+    unsigned char pin;
+    unsigned char nb_leds;
+    T_SegmentCollectionConfig config_on;
+    T_SegmentCollectionConfig config_off;
 };
 
-T_EffectConfig effect_config[NB_SEGMENT] = {
-    { CRed,   DOWN, Pulse },
-    { CBlue,  UP,   Wave },
+T_SegmentConfig* segments_on;
+T_EffectConfig* effects_on;
+T_SegmentConfig* segments_off;
+T_EffectConfig* effects_off;
+
+T_Totem totem = {
+    LEDSTRIP_PIN,
+    21,
+    { 2, segments_on, effects_on},
+    { 1, segments_off, effects_off }
 };
 
-#define NB_SEGMENT_OFF    1
-T_SegmentConfig seg_config_off[NB_SEGMENT_OFF] = {
-    { leds,       NUM_LEDS}
-};
-
-T_EffectConfig effect_config_off[NB_SEGMENT] = {
-    { CWhite, DOWN, Spark }
-};
