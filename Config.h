@@ -22,7 +22,7 @@
 
 // LED Strip
 #define LEDSTRIP_PIN      6
-#define NUM_LEDS          21
+#define NUM_LEDS          360
 #define NB_SEGMENT        2
 #define NB_SEGMENT_OFF    1
 
@@ -33,7 +33,7 @@ struct CRGB leds[NUM_LEDS];
 
 typedef struct T_Totem {
     unsigned char pin;
-    unsigned int nb_leds;
+    uint16_t nb_leds;
     T_SegmentCollectionConfig config_on;
     T_SegmentCollectionConfig config_off;
 };
