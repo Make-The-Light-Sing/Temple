@@ -30,6 +30,7 @@ void setup()
     
 //    setTotemTest2(leds);
     setConfiguration(leds);
+//    setTotemMounrning(leds);
     
     Effect_Factory factory;
     LED.init();
@@ -82,6 +83,8 @@ void loop()
         LED.showRGB((unsigned char *) leds, totem.nb_leds);
         segments.postStep();
         active = true;
+        // Delay
+        delay(totem.config_on.delay);
     } else {
         analogWrite(LED_RED, 255);
         analogWrite(LED_BLUE, 255);
@@ -93,9 +96,9 @@ void loop()
         segmentsOff.preStep();
         LED.showRGB((unsigned char *) leds, totem.nb_leds);
         segmentsOff.postStep();
+        // Delay
+        delay(totem.config_off.delay);
     }
-    // Delay
-    delay(20);
 }
 
 void setConfiguration(CRGB* leds)
@@ -114,8 +117,10 @@ void setConfiguration(CRGB* leds)
 void setTotemTest1(CRGB* leds)
 {
     unsigned char nb_segment_on  = 2;
-    unsigned char nb_leds        = 21;
+    unsigned int nb_leds        = 21;
     unsigned char nb_segment_off = 1;
+    unsigned char segment_on_delay = 20;
+    unsigned char segment_off_delay = 0;
 
     segments_on = (T_SegmentConfig *) malloc(nb_segment_on * sizeof(T_SegmentConfig));
     segments_on[0] = {leds, 10};
@@ -134,8 +139,8 @@ void setTotemTest1(CRGB* leds)
     totem = {
         LEDSTRIP_PIN,
         nb_leds,
-        { nb_segment_on, segments_on, effects_on},
-        { nb_segment_off, segments_off, effects_off }
+        { nb_segment_on, segment_on_delay, segments_on, effects_on},
+        { nb_segment_off, segment_off_delay, segments_off, effects_off }
     };
 }
 
@@ -145,8 +150,10 @@ void setTotemTest1(CRGB* leds)
 void setTotemTest2(CRGB* leds)
 {
     unsigned char nb_segment_on  = 2;
-    unsigned char nb_leds        = 21;
+    unsigned int nb_leds        = 21;
     unsigned char nb_segment_off = 1;
+    unsigned char segment_on_delay = 20;
+    unsigned char segment_off_delay = 0;
 
     segments_on = (T_SegmentConfig *) malloc(nb_segment_on * sizeof(T_SegmentConfig));
     segments_on[0] = {leds, 10};
@@ -165,7 +172,44 @@ void setTotemTest2(CRGB* leds)
     totem = {
         LEDSTRIP_PIN,
         nb_leds,
-        { nb_segment_on, segments_on, effects_on},
-        { nb_segment_off, segments_off, effects_off }
+        { nb_segment_on, segment_on_delay, segments_on, effects_on},
+        { nb_segment_off, segment_off_delay, segments_off, effects_off }
+    };
+}
+
+/**
+ * Totem with square base
+ */
+void setTotemMounrning(CRGB* leds)
+{
+    unsigned char nb_segment_on  = 4;
+    unsigned int nb_leds        = 360;
+    unsigned char nb_segment_off = 1;
+    unsigned char segment_on_delay = 0;
+    unsigned char segment_off_delay = 0;
+
+    segments_on = (T_SegmentConfig *) malloc(nb_segment_on * sizeof(T_SegmentConfig));
+    segments_on[0] = {leds, 90};
+    segments_on[1] = {leds + 90, 90};
+    segments_on[1] = {leds + 180, 90};
+    segments_on[1] = {leds + 270, 90};
+    
+    effects_on = (T_EffectConfig *) malloc(nb_segment_on * sizeof(T_EffectConfig));
+    effects_on[0] = {CWhite, DOWN, Wave};
+    effects_on[1] = {CWhite, UP, Wave};
+    effects_on[2] = {CWhite, DOWN, Wave};
+    effects_on[3] = {CWhite, UP, Wave};
+    
+    segments_off = (T_SegmentConfig *) malloc(nb_segment_off * sizeof(T_SegmentConfig));
+    segments_off[0] = {leds, nb_leds};
+    
+    effects_off = (T_EffectConfig *) malloc(nb_segment_off * sizeof(T_EffectConfig));
+    effects_off[0] = {CWhite, DOWN, Spark};
+
+    totem = {
+        LEDSTRIP_PIN,
+        nb_leds,
+        { nb_segment_on, segment_on_delay, segments_on, effects_on},
+        { nb_segment_off, segment_off_delay, segments_off, effects_off }
     };
 }

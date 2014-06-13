@@ -33,7 +33,7 @@ struct CRGB leds[NUM_LEDS];
 
 typedef struct T_Totem {
     unsigned char pin;
-    unsigned char nb_leds;
+    unsigned int nb_leds;
     T_SegmentCollectionConfig config_on;
     T_SegmentCollectionConfig config_off;
 };
@@ -45,8 +45,8 @@ T_EffectConfig* effects_off;
 
 T_Totem totem = {
     LEDSTRIP_PIN,
-    21,
-    { 2, segments_on, effects_on},
-    { 1, segments_off, effects_off }
+    0,
+    { 0, 0, segments_on, effects_on},
+    { 0, 0, segments_off, effects_off }
 };
 
