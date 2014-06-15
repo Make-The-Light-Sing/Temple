@@ -21,7 +21,8 @@ Totem<LEDSTRIP_PIN> totem;
  */
 void setup()
 {
-    totem = Totem<LEDSTRIP_PIN>(config_test);
+//    totem = Totem<LEDSTRIP_PIN>(config_test);
+    totem = Totem<LEDSTRIP_PIN>(detectConfig());
     totem.init();
     
     #ifdef DEBUG
@@ -59,4 +60,13 @@ void loop()
         totem.setSleeping();
     }
     totem.oneStep();
+}
+
+T_TotemConfig detectConfig()
+{
+    pinMode(30, OUTPUT);
+    pinMode(31, INPUT);
+    digitalWrite(30, LOW);
+    digitalWrite(31, HIGH);
+    return (digitalRead(31) == HIGH) ? config_test : config_mourning;
 }
