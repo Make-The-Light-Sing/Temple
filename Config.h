@@ -24,26 +24,9 @@
 #define PIN_SELECT_1      4
 #define PIN_SELECT_2      5
 
-struct CRGB leds[NUM_LEDS];
-
-typedef struct T_Totem {
-    unsigned char pin;
-    uint16_t nb_leds;
-    T_SegmentCollectionConfig config_on;
-    T_SegmentCollectionConfig config_off;
-};
-
 T_SegmentConfig* segments_on;
 T_EffectConfig* effects_on;
 T_SegmentConfig* segments_off;
 T_EffectConfig* effects_off;
-/*
-T_Totem totem = {
-    LEDSTRIP_PIN,
-    0,
-    { 0, 0, segments_on, effects_on},
-    { 0, 0, segments_off, effects_off }
-};
-*/
 
 

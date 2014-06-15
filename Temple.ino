@@ -27,12 +27,7 @@ void setup()
     pinMode(PIN_SELECT_1, INPUT);
     pinMode(PIN_SELECT_2, INPUT);
     
-/*    myTotem.pin = LEDSTRIP_PIN;
-    myTotem.nb_leds = NUM_LEDS;*/
-    
-    setTotemTest1(leds);
-//    setConfiguration(leds);
-//    setTotemMounrning(leds);
+    setTotemTest1();
     
     Effect_Factory factory;
     LED.init();
@@ -79,102 +74,55 @@ void loop()
             segments.setSegmentColor(i, c);
         }
         segments.preStep();
-        LED.showRGB((unsigned char *) leds, totem.nb_leds);
+        LED.showRGB((unsigned char *) totem.leds, totem.nb_leds);
         segments.postStep();
         active = true;
         // Delay
         delay(totem.config_on.delay);
     } else {
         if (active == true) {
-            memset(leds, 0, totem.nb_leds * sizeof(struct CRGB));
+            memset(totem.leds, 0, totem.nb_leds * sizeof(struct CRGB));
             active = false;
         }
         segmentsOff.preStep();
-        LED.showRGB((unsigned char *) leds, totem.nb_leds);
+        LED.showRGB((unsigned char *) totem.leds, totem.nb_leds);
         segmentsOff.postStep();
         // Delay
         delay(totem.config_off.delay);
-    }
-}
-/*
-void setConfiguration(CRGB* leds)
-{
-    if (digitalRead(PIN_SELECT_1) == HIGH)
-    {
-        setTotemTest1(leds);
-    } else {
-        setTotemTest2(leds);
     }
 }
 
 /**
  * Totem with square base
  */
-void setTotemTest1(CRGB* leds)
+void setTotemTest1()
 {
-    unsigned char nb_segment_on  = 2;
-    unsigned int nb_leds        = 21;
-    unsigned char nb_segment_off = 1;
-    unsigned char segment_on_delay = 20;
-    unsigned char segment_off_delay = 0;
+    uint8_t  nb_segment_on  = 2;
+    uint16_t nb_leds        = 21;
+    uint8_t  nb_segment_off = 1;
+    uint16_t segment_on_delay = 20;
+    uint16_t segment_off_delay = 0;
+
+    totem = Totem(LEDSTRIP_PIN, nb_leds);
 
     segments_on = (T_SegmentConfig *) malloc(nb_segment_on * sizeof(T_SegmentConfig));
-    segments_on[0] = {leds, 10};
-    segments_on[1] = {leds + 10, 11};
+    segments_on[0] = {totem.leds, 10};
+    segments_on[1] = {totem.leds + 10, 11};
     
     effects_on = (T_EffectConfig *) malloc(nb_segment_on * sizeof(T_EffectConfig));
     effects_on[0] = {CWhite, UP, Wave};
     effects_on[1] = {CWhite, DOWN, Wave};
     
     segments_off = (T_SegmentConfig *) malloc(nb_segment_off * sizeof(T_SegmentConfig));
-    segments_off[0] = {leds, 21};
+    segments_off[0] = {totem.leds, 21};
     
     effects_off = (T_EffectConfig *) malloc(nb_segment_off * sizeof(T_EffectConfig));
     effects_off[0] = {CWhite, DOWN, Spark};
 
-/*    totem = {
-        LEDSTRIP_PIN,
-        nb_leds,
-        { nb_segment_on, segment_on_delay, segments_on, effects_on},
-        { nb_segment_off, segment_off_delay, segments_off, effects_off }
-    };*/
-    totem.pin = LEDSTRIP_PIN;
+    
     totem.nb_leds = nb_leds;
     totem.config_on = { nb_segment_on, segment_on_delay, segments_on, effects_on};
     totem.config_off = { nb_segment_off, segment_off_delay, segments_off, effects_off };
-}
-
-/**
- * Totem with square base
- */
-/*void setTotemTest2(CRGB* leds)
-{
-    unsigned char nb_segment_on  = 2;
-    unsigned int nb_leds        = 21;
-    unsigned char nb_segment_off = 1;
-    unsigned char segment_on_delay = 20;
-    unsigned char segment_off_delay = 0;
-
-    segments_on = (T_SegmentConfig *) malloc(nb_segment_on * sizeof(T_SegmentConfig));
-    segments_on[0] = {leds, 10};
-    segments_on[1] = {leds + 10, 11};
-    
-    effects_on = (T_EffectConfig *) malloc(nb_segment_on * sizeof(T_EffectConfig));
-    effects_on[0] = {CWhite, DOWN, Wave};
-    effects_on[1] = {CWhite, UP, Wave};
-    
-    segments_off = (T_SegmentConfig *) malloc(nb_segment_off * sizeof(T_SegmentConfig));
-    segments_off[0] = {leds, 21};
-    
-    effects_off = (T_EffectConfig *) malloc(nb_segment_off * sizeof(T_EffectConfig));
-    effects_off[0] = {CWhite, DOWN, Wave};
-
-    totem = {
-        LEDSTRIP_PIN,
-        nb_leds,
-        { nb_segment_on, segment_on_delay, segments_on, effects_on},
-        { nb_segment_off, segment_off_delay, segments_off, effects_off }
-    };
 }
 
 /**
