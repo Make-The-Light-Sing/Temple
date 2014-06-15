@@ -6,11 +6,6 @@
 
 #include <Color.h>
 
-// RGB Test led
-#define LED_RED           44
-#define LED_GREEN         45
-#define LED_BLUE          46
-
 // HC-SR04 Sensor
 #define TRIGGER_PIN       9
 #define ECHO_PIN          8

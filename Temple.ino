@@ -21,16 +21,12 @@ boolean active = false;
  */
 void setup()
 {
-    pinMode(LED_RED, OUTPUT);
-    pinMode(LED_GREEN, OUTPUT);
-    pinMode(LED_BLUE, OUTPUT);
-    
     pinMode(PIN_SELECT_1, INPUT);
     pinMode(PIN_SELECT_2, INPUT);
     
-//    setTotemTest2(leds);
+    setTotemTest1(leds);
 //    setConfiguration(leds);
-    setTotemMounrning(leds);
+//    setTotemMounrning(leds);
     
     Effect_Factory factory;
     LED.init();
@@ -73,9 +69,6 @@ void loop()
     
     // Output color
     if (PIRFront.hasMovement() || PIRBack.hasMovement()) {
-        analogWrite(LED_RED, 255 - c.r * 2);
-        analogWrite(LED_BLUE, 255 - c.b * 2);
-        analogWrite(LED_GREEN, 255 - c.g * 2);
         for(unsigned int i = 0; i < totem.config_on.size; i++) {
             segments.setSegmentColor(i, c);
         }
@@ -86,9 +79,6 @@ void loop()
         // Delay
         delay(totem.config_on.delay);
     } else {
-        analogWrite(LED_RED, 255);
-        analogWrite(LED_BLUE, 255);
-        analogWrite(LED_GREEN, 255);
         if (active == true) {
             memset(leds, 0, totem.nb_leds * sizeof(struct CRGB));
             active = false;
