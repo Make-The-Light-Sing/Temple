@@ -26,17 +26,8 @@ void setup()
     pinMode(PIN_SELECT_2, INPUT);
     
     setTotemTest1();
-    
-    Effect_Factory factory;
     LED.init();
-    for (unsigned int i = 0; i < totem.config_on.size; i++) {
-        segments.addSegment(new Segment(totem.config_on.segments[i], factory.createEffect(totem.config_on.effects[i])));
-    }
-    for (unsigned int i = 0; i < totem.config_off.size; i++) {
-        segmentsOff.addSegment(new Segment(totem.config_off.segments[i], factory.createEffect(totem.config_off.effects[i])));
-    }
-    segments.init();
-    segmentsOff.init();
+    totem.init();
     
     #ifdef DEBUG
         Serial.begin(9600);
@@ -66,25 +57,16 @@ void loop()
     // Get CRGB value from index in an RGB wheel, index is the distance
     c.Wheel(distance);
     
-    // Output color
     if (PIRFront.hasMovement() || PIRBack.hasMovement()) {
         totem.setAwake();
-        for(unsigned int i = 0; i < totem.config_on.size; i++) {
-            segments.setSegmentColor(i, c);
-        }
-        segments.preStep();
-        LED.showRGB((unsigned char *) totem.leds, totem.nb_leds);
-        segments.postStep();
-        // Delay
-        delay(totem.config_on.delay);
+        totem.setColor(c);
     } else {
         totem.setSleeping();
-        segmentsOff.preStep();
-        LED.showRGB((unsigned char *) totem.leds, totem.nb_leds);
-        segmentsOff.postStep();
-        // Delay
-        delay(totem.config_off.delay);
     }
+    totem.getSegments().preStep();
+    LED.showRGB((unsigned char *) totem.leds, totem.nb_leds);
+    totem.getSegments().postStep();
+    delay(totem.getDelay());
 }
 
 /**
