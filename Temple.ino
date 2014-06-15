@@ -4,38 +4,25 @@
 #include <Color.h>
 #include <Segment.h>
 #include "Config.h"
+#include "Totem.h"
 
 //#define DEBUG
 
 HCSR04UltraSonic HCSR04(TRIGGER_PIN, ECHO_PIN);
 PIRSensor        PIRFront(PIR_FRONT_PIN, PIR_LOCK_DURATION);
 PIRSensor        PIRBack(PIR_BACK_PIN, PIR_LOCK_DURATION);
-TM1809Controller800Mhz<LEDSTRIP_PIN> LED;
-SegmentCollection segments;
-SegmentCollection segmentsOff;
+//SegmentCollection segments;
+//SegmentCollection segmentsOff;
 
-boolean active = false;
+Totem<LEDSTRIP_PIN> totem;
 
 /**
  * Init
  */
 void setup()
 {
-    pinMode(LED_RED, OUTPUT);
-    pinMode(LED_GREEN, OUTPUT);
-    pinMode(LED_BLUE, OUTPUT);
-    
-    Effect_Factory factory;
-    LED.init();
-    
-    for(unsigned int i = 0; i < NB_SEGMENT; i++) {
-        segments.addSegment(new Segment(seg_config[i], factory.createEffect(effect_config[i])));
-    }
-    for(unsigned int i = 0; i < NB_SEGMENT_OFF; i++) {
-        segmentsOff.addSegment(new Segment(seg_config_off[i], factory.createEffect(effect_config_off[i])));
-    }
-    segments.init();
-    segmentsOff.init();
+    totem = Totem<LEDSTRIP_PIN>(config_test);
+    totem.init();
     
     #ifdef DEBUG
         Serial.begin(9600);
@@ -65,30 +52,11 @@ void loop()
     // Get CRGB value from index in an RGB wheel, index is the distance
     c.Wheel(distance);
     
-    // Output color
     if (PIRFront.hasMovement() || PIRBack.hasMovement()) {
-        analogWrite(LED_RED, 255 - c.r * 2);
-        analogWrite(LED_BLUE, 255 - c.b * 2);
-        analogWrite(LED_GREEN, 255 - c.g * 2);
-        for(unsigned int i = 0; i < NB_SEGMENT; i++) {
-            segments.setSegmentColor(i, c);
-        }
-        segments.preStep();
-        LED.showRGB((unsigned char *) leds, NUM_LEDS);
-        segments.postStep();
-        active = true;
+        totem.setAwake();
+        totem.setColor(c);
     } else {
-        analogWrite(LED_RED, 255);
-        analogWrite(LED_BLUE, 255);
-        analogWrite(LED_GREEN, 255);
-        if (active == true) {
-            memset(leds, 0, NUM_LEDS * sizeof(struct CRGB));
-            active = false;
-        }
-        segmentsOff.preStep();
-        LED.showRGB((unsigned char *) leds, NUM_LEDS);
-        segmentsOff.postStep();
+        totem.setSleeping();
     }
-    // Delay
-    delay(20);
+    totem.oneStep();
 }
