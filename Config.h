@@ -37,11 +37,13 @@ T_SegmentConfig* segments_on;
 T_EffectConfig* effects_on;
 T_SegmentConfig* segments_off;
 T_EffectConfig* effects_off;
-
+/*
 T_Totem totem = {
     LEDSTRIP_PIN,
     0,
     { 0, 0, segments_on, effects_on},
     { 0, 0, segments_off, effects_off }
 };
+*/
+
 

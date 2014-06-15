@@ -4,6 +4,7 @@
 #include <Color.h>
 #include <Segment.h>
 #include "Config.h"
+#include "Totem.h"
 
 //#define DEBUG
 
@@ -16,6 +17,8 @@ SegmentCollection segmentsOff;
 
 boolean active = false;
 
+Totem totem;
+
 /**
  * Init
  */
@@ -23,6 +26,9 @@ void setup()
 {
     pinMode(PIN_SELECT_1, INPUT);
     pinMode(PIN_SELECT_2, INPUT);
+    
+/*    myTotem.pin = LEDSTRIP_PIN;
+    myTotem.nb_leds = NUM_LEDS;*/
     
     setTotemTest1(leds);
 //    setConfiguration(leds);
@@ -90,7 +96,7 @@ void loop()
         delay(totem.config_off.delay);
     }
 }
-
+/*
 void setConfiguration(CRGB* leds)
 {
     if (digitalRead(PIN_SELECT_1) == HIGH)
@@ -126,18 +132,22 @@ void setTotemTest1(CRGB* leds)
     effects_off = (T_EffectConfig *) malloc(nb_segment_off * sizeof(T_EffectConfig));
     effects_off[0] = {CWhite, DOWN, Spark};
 
-    totem = {
+/*    totem = {
         LEDSTRIP_PIN,
         nb_leds,
         { nb_segment_on, segment_on_delay, segments_on, effects_on},
         { nb_segment_off, segment_off_delay, segments_off, effects_off }
-    };
+    };*/
+    totem.pin = LEDSTRIP_PIN;
+    totem.nb_leds = nb_leds;
+    totem.config_on = { nb_segment_on, segment_on_delay, segments_on, effects_on};
+    totem.config_off = { nb_segment_off, segment_off_delay, segments_off, effects_off };
 }
 
 /**
  * Totem with square base
  */
-void setTotemTest2(CRGB* leds)
+/*void setTotemTest2(CRGB* leds)
 {
     unsigned char nb_segment_on  = 2;
     unsigned int nb_leds        = 21;
@@ -170,7 +180,7 @@ void setTotemTest2(CRGB* leds)
 /**
  * Totem with square base
  */
-void setTotemMounrning(CRGB* leds)
+/*void setTotemMounrning(CRGB* leds)
 {
     unsigned char nb_segment_on  = 4;
     uint16_t nb_leds        = 360;
@@ -209,3 +219,5 @@ void setTotemMounrning(CRGB* leds)
         { nb_segment_off, segment_off_delay, segments_off, effects_off }
     };
 }
+
+// */
