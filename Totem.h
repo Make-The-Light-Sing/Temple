@@ -20,6 +20,12 @@ typedef enum E_TOTEM_MODE {
     AWAKE    = 1
 };
 
+typedef struct T_TotemConfig {
+    uint16_t nb_leds;
+    T_SegmentCollectionConfig config_on;
+    T_SegmentCollectionConfig config_off;
+};
+
 template <uint8_t DATA_PIN>
 class Totem {
         /* properties */
@@ -40,6 +46,15 @@ class Totem {
         Totem(uint16_t nb_leds): nb_leds(nb_leds)
         {
             leds = (struct CRGB *) malloc(nb_leds * sizeof(struct CRGB));
+            segments.setLeds(leds);
+            segmentsOff.setLeds(leds);
+        };
+        Totem(T_TotemConfig config): 
+            nb_leds(config.nb_leds), config_on(config.config_on), config_off(config.config_off)
+        {
+            leds = (struct CRGB *) malloc(nb_leds * sizeof(struct CRGB));
+            segments.setLeds(leds);
+            segmentsOff.setLeds(leds);
         };
         
         /**
@@ -49,11 +64,9 @@ class Totem {
         {
             Effect_Factory factory;
             for (unsigned int i = 0; i < config_on.size; i++) {
-//                segments.addSegment(new Segment(config_on.segments[i], factory.createEffect(config_on.effects[i])));
                 segments.addSegment(new Segment(config_on.segments[i]));
             }
             for (unsigned int i = 0; i < config_off.size; i++) {
-//                segmentsOff.addSegment(new Segment(config_off.segments[i], factory.createEffect(config_off.effects[i])));
                 segmentsOff.addSegment(new Segment(config_off.segments[i]));
             }
             segments.init();
