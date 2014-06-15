@@ -11,22 +11,17 @@
 HCSR04UltraSonic HCSR04(TRIGGER_PIN, ECHO_PIN);
 PIRSensor        PIRFront(PIR_FRONT_PIN, PIR_LOCK_DURATION);
 PIRSensor        PIRBack(PIR_BACK_PIN, PIR_LOCK_DURATION);
-TM1809Controller800Mhz<LEDSTRIP_PIN> LED;
 SegmentCollection segments;
 SegmentCollection segmentsOff;
 
-Totem totem;
+Totem<LEDSTRIP_PIN> totem;
 
 /**
  * Init
  */
 void setup()
 {
-    pinMode(PIN_SELECT_1, INPUT);
-    pinMode(PIN_SELECT_2, INPUT);
-    
     setTotemTest1();
-    LED.init();
     totem.init();
     
     #ifdef DEBUG
@@ -63,10 +58,7 @@ void loop()
     } else {
         totem.setSleeping();
     }
-    totem.getSegments().preStep();
-    LED.showRGB((unsigned char *) totem.leds, totem.nb_leds);
-    totem.getSegments().postStep();
-    delay(totem.getDelay());
+    totem.oneStep();
 }
 
 /**
@@ -74,32 +66,25 @@ void loop()
  */
 void setTotemTest1()
 {
+    T_SegmentConfig* segments_on;
+    T_SegmentConfig* segments_off;
+
     uint8_t  nb_segment_on  = 2;
     uint16_t nb_leds        = 21;
     uint8_t  nb_segment_off = 1;
     uint16_t segment_on_delay = 20;
     uint16_t segment_off_delay = 0;
 
-    totem = Totem(LEDSTRIP_PIN, nb_leds);
+    totem = Totem<LEDSTRIP_PIN>(nb_leds);
 
     segments_on = (T_SegmentConfig *) malloc(nb_segment_on * sizeof(T_SegmentConfig));
-    segments_on[0] = {totem.leds, 10};
-    segments_on[1] = {totem.leds + 10, 11};
-    
-    effects_on = (T_EffectConfig *) malloc(nb_segment_on * sizeof(T_EffectConfig));
-    effects_on[0] = {CWhite, UP, Wave};
-    effects_on[1] = {CWhite, DOWN, Wave};
-    
+    segments_on[0] = {totem.leds, 10, {CWhite, UP, Wave}};
+    segments_on[1] = {totem.leds + 10, 11, {CWhite, DOWN, Wave}};
     segments_off = (T_SegmentConfig *) malloc(nb_segment_off * sizeof(T_SegmentConfig));
-    segments_off[0] = {totem.leds, 21};
-    
-    effects_off = (T_EffectConfig *) malloc(nb_segment_off * sizeof(T_EffectConfig));
-    effects_off[0] = {CWhite, DOWN, Spark};
+    segments_off[0] = {totem.leds, 21, {CWhite, DOWN, Spark}};
 
-    
-    totem.nb_leds = nb_leds;
-    totem.config_on = { nb_segment_on, segment_on_delay, segments_on, effects_on};
-    totem.config_off = { nb_segment_off, segment_off_delay, segments_off, effects_off };
+    totem.config_on = { nb_segment_on, segment_on_delay, segments_on};
+    totem.config_off = { nb_segment_off, segment_off_delay, segments_off};
 }
 
 /**
