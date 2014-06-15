@@ -8,6 +8,18 @@
 #ifndef TOTEM_H_
 #define TOTEM_H_
 
+#include <FastSPI_LED2.h>
+#include <PIRSensor.h>
+#include <HCSR04UltraSonic.h>
+#include <Color.h>
+#include <Segment.h>
+
+
+typedef enum E_TOTEM_MODE {
+    SLEEPING = 0,
+    AWAKE    = 1
+};
+
 class Totem {
         /* properties */
     public:
@@ -16,11 +28,19 @@ class Totem {
         T_SegmentCollectionConfig config_on;
         T_SegmentCollectionConfig config_off;
         struct CRGB *leds;
+    protected:
+        E_TOTEM_MODE mode = SLEEPING;
         
         /* methods */
     public:
         Totem() {};
         Totem(uint8_t pin, uint16_t nb_leds): pin(pin), nb_leds(nb_leds) { leds = (struct CRGB *) malloc(nb_leds * sizeof(struct CRGB)); };
+        void         setMode(E_TOTEM_MODE new_mode);
+        E_TOTEM_MODE getMode() { return mode; };
+        boolean      isSleeping() { return mode == SLEEPING; };
+        boolean      isAwake() { return mode == AWAKE; };
+        void         setSleeping() { setMode(SLEEPING); };
+        void         setAwake() { setMode(AWAKE); };
 };  // class Totem
 
 

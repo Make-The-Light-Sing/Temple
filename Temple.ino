@@ -15,8 +15,6 @@ TM1809Controller800Mhz<LEDSTRIP_PIN> LED;
 SegmentCollection segments;
 SegmentCollection segmentsOff;
 
-boolean active = false;
-
 Totem totem;
 
 /**
@@ -70,20 +68,17 @@ void loop()
     
     // Output color
     if (PIRFront.hasMovement() || PIRBack.hasMovement()) {
+        totem.setAwake();
         for(unsigned int i = 0; i < totem.config_on.size; i++) {
             segments.setSegmentColor(i, c);
         }
         segments.preStep();
         LED.showRGB((unsigned char *) totem.leds, totem.nb_leds);
         segments.postStep();
-        active = true;
         // Delay
         delay(totem.config_on.delay);
     } else {
-        if (active == true) {
-            memset(totem.leds, 0, totem.nb_leds * sizeof(struct CRGB));
-            active = false;
-        }
+        totem.setSleeping();
         segmentsOff.preStep();
         LED.showRGB((unsigned char *) totem.leds, totem.nb_leds);
         segmentsOff.postStep();

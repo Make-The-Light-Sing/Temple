@@ -4,8 +4,6 @@
  * @author : Jeckel <jeckel@jeckel.fr>
  */
 
-#include <Color.h>
-
 // HC-SR04 Sensor
 #define TRIGGER_PIN       9
 #define ECHO_PIN          8
