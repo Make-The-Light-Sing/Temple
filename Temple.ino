@@ -62,11 +62,27 @@ void loop()
     totem.oneStep();
 }
 
+/**
+ * Detect jumper to define which configuration to use 
+ * 30-31 ==> Totem 1 : Mourning
+ * 32-33 ==> Totem 2 : Techno
+ * else ==> config test
+ */
 T_TotemConfig detectConfig()
 {
     pinMode(30, OUTPUT);
     pinMode(31, INPUT);
+    pinMode(32, OUTPUT);
+    pinMode(33, INPUT);
     digitalWrite(30, LOW);
     digitalWrite(31, HIGH);
-    return (digitalRead(31) == HIGH) ? config_test : config_mourning;
+    digitalWrite(32, LOW);
+    digitalWrite(33, HIGH);
+    
+    if (digitalRead(31) == LOW) {
+        return config_mourning;
+    } else if (digitalRead(33) == LOW) {
+        return config_techno;
+    }
+    return config_test;
 }
