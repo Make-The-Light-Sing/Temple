@@ -15,6 +15,7 @@ PIRSensor        PIRBack(PIR_BACK_PIN, PIR_LOCK_DURATION);
 //SegmentCollection segmentsOff;
 
 Totem<LEDSTRIP_PIN> totem;
+uint8_t configId;
 
 /**
  * Init
@@ -23,7 +24,8 @@ void setup()
 {
 //    totem = Totem<LEDSTRIP_PIN>(config_test);
 //    totem = Totem<LEDSTRIP_PIN>(detectConfig());
-    setConfig(detectConfig());
+    configId = detectConfig(); 
+    setConfig(configId);
     totem.init();
     
     #ifdef DEBUG
@@ -71,19 +73,37 @@ void loop()
  */
 uint8_t detectConfig()
 {
-    pinMode(30, OUTPUT);
+    pinMode(30, OUTPUT);    // Totem 1
     pinMode(31, INPUT);
-    pinMode(32, OUTPUT);
+    pinMode(32, OUTPUT);    // Totem 2
     pinMode(33, INPUT);
+    pinMode(34, OUTPUT);    // Totem 3
+    pinMode(35, INPUT);
+    pinMode(36, OUTPUT);    // Totem 4
+    pinMode(37, INPUT);
+    pinMode(38, OUTPUT);    // pyramid
+    pinMode(39, INPUT);
     digitalWrite(30, LOW);
-    digitalWrite(31, HIGH);
+    digitalWrite(31, HIGH);    // pull up
     digitalWrite(32, LOW);
-    digitalWrite(33, HIGH);
+    digitalWrite(33, HIGH);    // pull up
+    digitalWrite(34, LOW);
+    digitalWrite(35, HIGH);    // pull up
+    digitalWrite(36, LOW);
+    digitalWrite(37, HIGH);    // pull up
+    digitalWrite(38, LOW);
+    digitalWrite(39, HIGH);    // pull up
     
     if (digitalRead(31) == LOW) {
         return TOTEM_MOURNING;
     } else if (digitalRead(33) == LOW) {
         return TOTEM_TECHNO;
+    } else if (digitalRead(35) == LOW) {
+        return TOTEM_MEDITATION;
+    } else if (digitalRead(37) == LOW) {
+        return TOTEM_ECSTASY;
+    } else if (digitalRead(39) == LOW) {
+        return TOTEM_PYRAMID;
     }
     return TOTEM_TEST;
 }

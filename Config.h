@@ -111,4 +111,9 @@ T_TotemConfig config_techno = {
     }
 };
 
+#define TOTEM_MEDITATION 3
+#define TOTEM_ECSTASY    4
+#define TOTEM_PYRAMID    5
+
+
 // */
