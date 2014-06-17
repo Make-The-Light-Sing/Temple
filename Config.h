@@ -21,6 +21,7 @@
 /**
  * Test configuration with 21 leds
  */
+#define TOTEM_TEST 0
 T_SegmentConfig config_test_on[3] = {
     {0, 10, {CWhite, UP, Wave}},
     {10, 11, {CWhite, DOWN, Color_Chase}}
@@ -50,6 +51,7 @@ T_TotemConfig config_test = {
  * Color : outside : dark gray / blue, inside : green, maroon
  * 4 strips of 90 leds each
  */
+#define TOTEM_MOURNING 1
 T_SegmentConfig config_mourning_on[4] = {
     {0, 90, {CWhite, UP, Wave}},
     {90, 90, {CWhite, DOWN, Wave}},
@@ -84,6 +86,7 @@ T_TotemConfig config_mourning = {
  * Color : outside : grey, green, red, inside : white, yellow
  * 3 strips of 90 leds each
  */
+#define TOTEM_TECHNO 2
 T_SegmentConfig config_techno_on[4] = {
     {0, 90, {CWhite, UP, Wave}},
     {90, 90, {CWhite, DOWN, Wave}},

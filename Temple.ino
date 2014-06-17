@@ -8,7 +8,7 @@
 
 //#define DEBUG
 
-HCSR04UltraSonic HCSR04(TRIGGER_PIN, ECHO_PIN);
+HCSR04UltraSonic HCSR04(TRIGGER_PIN, ECHO_PIN, 1000);
 PIRSensor        PIRFront(PIR_FRONT_PIN, PIR_LOCK_DURATION);
 PIRSensor        PIRBack(PIR_BACK_PIN, PIR_LOCK_DURATION);
 //SegmentCollection segments;
@@ -22,7 +22,8 @@ Totem<LEDSTRIP_PIN> totem;
 void setup()
 {
 //    totem = Totem<LEDSTRIP_PIN>(config_test);
-    totem = Totem<LEDSTRIP_PIN>(detectConfig());
+//    totem = Totem<LEDSTRIP_PIN>(detectConfig());
+    setConfig(detectConfig());
     totem.init();
     
     #ifdef DEBUG
@@ -68,7 +69,7 @@ void loop()
  * 32-33 ==> Totem 2 : Techno
  * else ==> config test
  */
-T_TotemConfig detectConfig()
+uint8_t detectConfig()
 {
     pinMode(30, OUTPUT);
     pinMode(31, INPUT);
@@ -80,9 +81,28 @@ T_TotemConfig detectConfig()
     digitalWrite(33, HIGH);
     
     if (digitalRead(31) == LOW) {
-        return config_mourning;
+        return TOTEM_MOURNING;
     } else if (digitalRead(33) == LOW) {
-        return config_techno;
+        return TOTEM_TECHNO;
     }
-    return config_test;
+    return TOTEM_TEST;
+}
+
+
+/**
+ * Initialize configuration according to hardware detection
+ */
+void setConfig(uint8_t configId)
+{
+    switch(configId) {
+        case TOTEM_MOURNING:
+            totem = Totem<LEDSTRIP_PIN>(config_mourning);
+            break;
+        case TOTEM_TECHNO:
+            totem = Totem<LEDSTRIP_PIN>(config_techno);
+            break;
+        case TOTEM_TEST:
+        default:
+            totem = Totem<LEDSTRIP_PIN>(config_test);
+    }
 }
