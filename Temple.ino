@@ -8,7 +8,7 @@
 
 //#define DEBUG
 
-HCSR04UltraSonic HCSR04(TRIGGER_PIN, ECHO_PIN, 1000);
+HCSR04UltraSonic HCSR04(TRIGGER_PIN, ECHO_PIN, 20000);
 PIRSensor        PIRFront(PIR_FRONT_PIN, PIR_LOCK_DURATION);
 PIRSensor        PIRBack(PIR_BACK_PIN, PIR_LOCK_DURATION);
 //SegmentCollection segments;

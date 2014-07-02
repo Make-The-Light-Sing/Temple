@@ -7,8 +7,8 @@
 #include "Totem.h"
 
 // HC-SR04 Sensor
-#define TRIGGER_PIN       9
-#define ECHO_PIN          8
+#define TRIGGER_PIN       4
+#define ECHO_PIN          5
 
 // PIR Sensor
 #define PIR_FRONT_PIN     3
@@ -50,6 +50,7 @@ T_TotemConfig config_test = {
  * Building with square base.
  * Color : outside : dark gray / blue, inside : green, maroon
  * 4 strips of 90 leds each
+ * Bridge : 30-31
  */
 #define TOTEM_MOURNING 1
 T_SegmentConfig config_mourning_on[4] = {
@@ -68,7 +69,7 @@ T_TotemConfig config_mourning = {
     .nb_leds = 360,
     .config_on = {
         .size = 4,
-        .delay = 10,
+        .delay = 0,
         .segments = config_mourning_on
     },
     .config_off = {
@@ -85,6 +86,7 @@ T_TotemConfig config_mourning = {
  * Building with triangle base.
  * Color : outside : grey, green, red, inside : white, yellow
  * 3 strips of 90 leds each
+ * Bridge : 32-33
  */
 #define TOTEM_TECHNO 2
 T_SegmentConfig config_techno_on[4] = {
