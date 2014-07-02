@@ -115,8 +115,46 @@ T_TotemConfig config_techno = {
     .i2c_port = TOTEM_TECHNO
 };
 
-#define TOTEM_MEDITATION 3
-#define TOTEM_ECSTASY    4
+/**
+ * Totem 3 :
+ * Shortname : Meditation
+ * One column with plates
+ * Bridges : 34-35
+ */
+#define TOTEM_MEDITATION 35
+
+/**
+ * Totem 4 :
+ * Shortname : Ecstasy
+ * The claw
+ * Bridges : 36-37
+ */
+#define TOTEM_ECSTASY    37
+T_SegmentConfig config_ecstasy_on[4] = {
+    {0, 93, {CWhite, DOWN, Wave}},
+    {93, 93, {CWhite, UP, Wave}},
+    {186, 105, {CWhite, DOWN, Wave}}
+};
+T_SegmentConfig config_ecstasy_off[4] = {
+    {0, 93, {CWhite, UP, Spark}},
+    {93, 93, {CWhite, UP, Spark}},
+    {186, 105, {CWhite, UP, Spark}}
+};
+T_TotemConfig config_ecstasy = {
+    .nb_leds = 291,
+    .config_on = {
+        .size = 3,
+        .delay = 10,
+        .segments = config_ecstasy_on
+    },
+    .config_off = {
+        .size = 3,
+        .delay = 0,
+        .segments = config_ecstasy_off
+    },
+    .i2c_port = TOTEM_ECSTASY
+};
+
 
 /**
  * Pyramid, located in the center, no sensor on this one, use sensor from other totem
@@ -124,10 +162,10 @@ T_TotemConfig config_techno = {
  */
 #define TOTEM_PYRAMID    39
 T_SegmentConfig config_pyramid_on[1] = {
-    {0, 21, {CWhite, UP, Wave}}
+    {0, 21, {CWhite, UP, Rainbow}}
 };
 T_SegmentConfig config_pyramid_off[1] = {
-    {0, 21, {CWhite, DOWN, Wave}}
+    {0, 21, {CWhite, DOWN, Spark}}
 };
 T_TotemConfig config_pyramid = {
     .nb_leds = 21,
