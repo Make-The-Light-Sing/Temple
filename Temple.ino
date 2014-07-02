@@ -47,16 +47,7 @@ void setup()
  */
 void loop()
 {
-    if (configId == TOTEM_PYRAMID) {
-        if (Wire.requestFrom(TOTEM_MOURNING, 3) == 3)
-        {
-            stripColor.r = Wire.read();
-            stripColor.g = Wire.read();
-            stripColor.b = Wire.read();
-        }
-        totem.setColor(stripColor);
-        totem.oneStep();
-    } else {    
+    if (configId != TOTEM_PYRAMID) {
         // Read distance from Sensor
         //int distance = HCSR04.readDistance();
         int distance = HCSR04.timing() >> 4;
@@ -72,15 +63,16 @@ void loop()
             
         // Get CRGB value from index in an RGB wheel, index is the distance
         stripColor.Wheel(distance);
-        
-        if (PIRFront.hasMovement() || PIRBack.hasMovement()) {
-            totem.setAwake();
-            totem.setColor(stripColor);
-        } else {
-            totem.setSleeping();
-        }
-        totem.oneStep();
+    }    
+    
+    //if (PIRFront.hasMovement() || PIRBack.hasMovement()) {
+    if (getMovement()) {
+        totem.setAwake();
+        totem.setColor(stripColor);
+    } else {
+        totem.setSleeping();
     }
+    totem.oneStep();
 }
 
 /**
@@ -153,6 +145,48 @@ void setConfig(uint8_t configId)
  */
 void onRequestHandler()
 {
-    uint8_t buffer[3] = {stripColor.r, stripColor.g, stripColor.b};
-    Wire.write(buffer, 3);
+    uint8_t buffer[1] = { PIRBack.hasMovement() ? 1 : 0 };
+    Wire.write(buffer, 1);
+}
+
+/**
+ * Check if given totem id is awake or not, using i2c channel
+ */
+boolean checkTotemAwake(int totemId)
+{
+    boolean awake = false;
+    if (Wire.requestFrom(totemId, 1) == 1)
+    {
+        awake = (Wire.read() > 0);
+    }
+    return awake;
+}
+
+/**
+ * Return if there is movement activating this totem
+ */
+boolean getMovement()
+{
+    static int lastTotem = TOTEM_MOURNING;
+    if (configId == TOTEM_PYRAMID) {
+        /*switch(lastTotem) {
+            case TOTEM_MOURNING :
+                lastTotem = TOTEM_TECHNO;
+                break;
+            case TOTEM_TECHNO :
+                lastTotem = TOTEM_MEDITATION;
+                break;
+            case TOTEM_MEDITATION :
+                lastTotem = TOTEM_ECSTASY;
+                break;
+            case TOTEM_ECSTASY :
+            default:
+                lastTotem = TOTEM_MOURNING;
+                break;
+        }
+        return checkTotemAwake(lastTotem);*/
+        return checkTotemAwake(TOTEM_TECHNO) && checkTotemAwake(TOTEM_ECSTASY);
+    } else {
+        return (PIRFront.hasMovement() || PIRBack.hasMovement());
+    }
 }
