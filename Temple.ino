@@ -8,11 +8,9 @@
 
 //#define DEBUG
 
-HCSR04UltraSonic HCSR04(TRIGGER_PIN, ECHO_PIN, 20000);
+HCSR04UltraSonic HCSR04(TRIGGER_PIN, ECHO_PIN, 10000); // ==> Around 3m
 PIRSensor        PIRFront(PIR_FRONT_PIN, PIR_LOCK_DURATION);
 PIRSensor        PIRBack(PIR_BACK_PIN, PIR_LOCK_DURATION);
-//SegmentCollection segments;
-//SegmentCollection segmentsOff;
 
 Totem<LEDSTRIP_PIN> totem;
 uint8_t configId;
@@ -22,8 +20,6 @@ uint8_t configId;
  */
 void setup()
 {
-//    totem = Totem<LEDSTRIP_PIN>(config_test);
-//    totem = Totem<LEDSTRIP_PIN>(detectConfig());
     configId = detectConfig(); 
     setConfig(configId);
     totem.init();
@@ -42,7 +38,8 @@ void loop()
     struct CRGB c;
 
     // Read distance from Sensor
-    int distance = HCSR04.readDistance();
+    //int distance = HCSR04.readDistance();
+    int distance = HCSR04.timing() >> 4;
     #ifdef DEBUG
         Serial.println(distance);
         if (PIRFront.triggered()) {
