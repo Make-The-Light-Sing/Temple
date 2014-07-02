@@ -83,39 +83,50 @@ void loop()
  */
 uint8_t detectConfig()
 {
-    pinMode(30, OUTPUT);    // Totem 1
-    pinMode(31, INPUT);
-    pinMode(32, OUTPUT);    // Totem 2
-    pinMode(33, INPUT);
-    pinMode(34, OUTPUT);    // Totem 3
-    pinMode(35, INPUT);
-    pinMode(36, OUTPUT);    // Totem 4
-    pinMode(37, INPUT);
-    pinMode(38, OUTPUT);    // pyramid
-    pinMode(39, INPUT);
-    digitalWrite(30, LOW);
-    digitalWrite(31, HIGH);    // pull up
-    digitalWrite(32, LOW);
-    digitalWrite(33, HIGH);    // pull up
-    digitalWrite(34, LOW);
-    digitalWrite(35, HIGH);    // pull up
-    digitalWrite(36, LOW);
-    digitalWrite(37, HIGH);    // pull up
-    digitalWrite(38, LOW);
-    digitalWrite(39, HIGH);    // pull up
-    
-    if (digitalRead(31) == LOW) {
-        return TOTEM_MOURNING;
-    } else if (digitalRead(33) == LOW) {
-        return TOTEM_TECHNO;
-    } else if (digitalRead(35) == LOW) {
-        return TOTEM_MEDITATION;
-    } else if (digitalRead(37) == LOW) {
-        return TOTEM_ECSTASY;
-    } else if (digitalRead(39) == LOW) {
-        return TOTEM_PYRAMID;
-    }
-    return TOTEM_TEST;
+    #if defined(__AVR_ATmega2560__)
+        pinMode(30, OUTPUT);    // Totem TOTEM_MOURNING
+        pinMode(31, INPUT);
+        pinMode(32, OUTPUT);    // Totem TOTEM_TECHNO
+        pinMode(33, INPUT);
+        pinMode(34, OUTPUT);    // Totem TOTEM_MEDITATION
+        pinMode(35, INPUT);
+        pinMode(36, OUTPUT);    // Totem TOTEM_ECSTASY
+        pinMode(37, INPUT);
+        pinMode(38, OUTPUT);    // pyramid
+        pinMode(39, INPUT);
+        digitalWrite(30, LOW);
+        digitalWrite(31, HIGH);    // pull up
+        digitalWrite(32, LOW);
+        digitalWrite(33, HIGH);    // pull up
+        digitalWrite(34, LOW);
+        digitalWrite(35, HIGH);    // pull up
+        digitalWrite(36, LOW);
+        digitalWrite(37, HIGH);    // pull up
+        digitalWrite(38, LOW);
+        digitalWrite(39, HIGH);    // pull up
+        
+        if (digitalRead(31) == LOW) {
+            return TOTEM_MOURNING;
+        } else if (digitalRead(33) == LOW) {
+            return TOTEM_TECHNO;
+        } else if (digitalRead(35) == LOW) {
+            return TOTEM_MEDITATION;
+        } else if (digitalRead(37) == LOW) {
+            return TOTEM_ECSTASY;
+        } else if (digitalRead(39) == LOW) {
+            return TOTEM_PYRAMID;
+        }
+        return TOTEM_TEST;
+    #else
+        pinMode(12, OUTPUT);    // Totem TOTEM_MEDITATION
+        pinMode(13, INPUT);
+        digitalWrite(12, LOW);
+        digitalWrite(13, HIGH);    // pull up
+        if (digitalRead(13) == LOW) {
+            return TOTEM_MEDITATION;
+        }
+        return TOTEM_TEST;
+    #endif
 }
 
 
