@@ -52,7 +52,7 @@ T_TotemConfig config_test = {
  * 4 strips of 90 leds each
  * Bridge : 30-31
  */
-#define TOTEM_MOURNING 1
+#define TOTEM_MOURNING 31
 T_SegmentConfig config_mourning_on[4] = {
     {0, 90, {CWhite, UP, Wave}},
     {90, 90, {CWhite, DOWN, Wave}},
@@ -76,7 +76,8 @@ T_TotemConfig config_mourning = {
         .size = 4,
         .delay = 0,
         .segments = config_mourning_off
-    }
+    },
+    .i2c_port = TOTEM_MOURNING
 };
 
 
@@ -88,7 +89,7 @@ T_TotemConfig config_mourning = {
  * 3 strips of 90 leds each
  * Bridge : 32-33
  */
-#define TOTEM_TECHNO 2
+#define TOTEM_TECHNO 33
 T_SegmentConfig config_techno_on[4] = {
     {0, 90, {CWhite, UP, Wave}},
     {90, 90, {CWhite, DOWN, Wave}},
@@ -110,12 +111,37 @@ T_TotemConfig config_techno = {
         .size = 3,
         .delay = 0,
         .segments = config_techno_off
-    }
+    },
+    .i2c_port = TOTEM_TECHNO
 };
 
 #define TOTEM_MEDITATION 3
 #define TOTEM_ECSTASY    4
-#define TOTEM_PYRAMID    5
 
+/**
+ * Pyramid, located in the center, no sensor on this one, use sensor from other totem
+ * Bridge : 38-39
+ */
+#define TOTEM_PYRAMID    39
+T_SegmentConfig config_pyramid_on[1] = {
+    {0, 90, {CWhite, UP, Wave}}
+};
+T_SegmentConfig config_pyramid_off[1] = {
+    {0, 90, {CWhite, UP, Rainbow}}
+};
+T_TotemConfig config_pyramid = {
+    .nb_leds = 90,
+    .config_on = {
+        .size = 3,
+        .delay = 10,
+        .segments = config_pyramid_on
+    },
+    .config_off = {
+        .size = 3,
+        .delay = 0,
+        .segments = config_pyramid_off
+    },
+    .i2c_port = 0        // ===> Should be master
+};
 
 // */
