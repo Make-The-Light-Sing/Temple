@@ -186,8 +186,9 @@ boolean checkTotemAwake(int totemId)
 boolean getMovement()
 {
     static int lastTotem = TOTEM_MOURNING;
+    static int lastMovement = 0;
     if (configId == TOTEM_PYRAMID) {
-        /*switch(lastTotem) {
+        switch(lastTotem) {
             case TOTEM_MOURNING :
                 lastTotem = TOTEM_TECHNO;
                 break;
@@ -202,9 +203,15 @@ boolean getMovement()
                 lastTotem = TOTEM_MOURNING;
                 break;
         }
-        return checkTotemAwake(lastTotem);*/
+        if (checkTotemAwake(lastTotem)) {
+            lastMovement = 4;
+        } else if (lastMovement > 0) {
+            lastMovement --;
+        }
+        return (lastMovement > 0);
+            
         //return checkTotemAwake(TOTEM_TECHNO) && checkTotemAwake(TOTEM_ECSTASY);
-        return true;
+        //return true;
     } else {
         return (PIRFront.hasMovement() || PIRBack.hasMovement());
     }
