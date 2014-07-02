@@ -158,6 +158,14 @@ class Totem {
             getSegments().postStep();
             delay(getDelay());
         };
+        
+        /**
+         * Return totem's i2c port
+         */
+        uint8_t getI2CPort()
+        {
+            return _totemConfig.i2c_port;
+        };
 };  // class Totem
 
 
