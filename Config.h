@@ -91,9 +91,9 @@ T_TotemConfig config_mourning = {
  */
 #define TOTEM_TECHNO 33
 T_SegmentConfig config_techno_on[4] = {
-    {0, 90, {CWhite, UP, Wave}},
-    {90, 90, {CWhite, DOWN, Wave}},
-    {180, 90, {CWhite, UP, Wave}}
+    {0, 90, {CWhite, DOWN, Wave}},
+    {90, 90, {CWhite, UP, Wave}},
+    {180, 90, {CWhite, DOWN, Wave}}
 };
 T_SegmentConfig config_techno_off[4] = {
     {0, 90, {CWhite, UP, Spark}},
@@ -124,20 +124,20 @@ T_TotemConfig config_techno = {
  */
 #define TOTEM_PYRAMID    39
 T_SegmentConfig config_pyramid_on[1] = {
-    {0, 90, {CWhite, UP, Wave}}
+    {0, 21, {CWhite, UP, Wave}}
 };
 T_SegmentConfig config_pyramid_off[1] = {
-    {0, 90, {CWhite, UP, Rainbow}}
+    {0, 21, {CWhite, DOWN, Wave}}
 };
 T_TotemConfig config_pyramid = {
-    .nb_leds = 90,
+    .nb_leds = 21,
     .config_on = {
-        .size = 3,
+        .size = 1,
         .delay = 10,
         .segments = config_pyramid_on
     },
     .config_off = {
-        .size = 3,
+        .size = 1,
         .delay = 0,
         .segments = config_pyramid_off
     },
