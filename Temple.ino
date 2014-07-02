@@ -7,7 +7,7 @@
 #include "Totem.h"
 #include <Wire.h>
 
-#define DEBUG
+//#define DEBUG
 
 HCSR04UltraSonic HCSR04(TRIGGER_PIN, ECHO_PIN, 10000); // ==> Around 3m
 PIRSensor        PIRFront(PIR_FRONT_PIN, PIR_LOCK_DURATION);
@@ -131,6 +131,12 @@ void setConfig(uint8_t configId)
         case TOTEM_TECHNO:
             totem = Totem<LEDSTRIP_PIN>(config_techno);
             break;
+        case TOTEM_MEDITATION:
+            totem = Totem<LEDSTRIP_PIN>(config_meditation);
+            break;
+        case TOTEM_ECSTASY:
+            totem = Totem<LEDSTRIP_PIN>(config_ecstasy);
+            break;
         case TOTEM_PYRAMID:
             totem = Totem<LEDSTRIP_PIN>(config_pyramid);
             break;
@@ -145,7 +151,8 @@ void setConfig(uint8_t configId)
  */
 void onRequestHandler()
 {
-    uint8_t buffer[1] = { PIRBack.hasMovement() ? 1 : 0 };
+    //uint8_t buffer[1] = { PIRBack.hasMovement() ? 1 : 0 };
+    uint8_t buffer[1] = { totem.isAwake() ? 1 : 0 };
     Wire.write(buffer, 1);
 }
 
@@ -185,7 +192,8 @@ boolean getMovement()
                 break;
         }
         return checkTotemAwake(lastTotem);*/
-        return checkTotemAwake(TOTEM_TECHNO) && checkTotemAwake(TOTEM_ECSTASY);
+        //return checkTotemAwake(TOTEM_TECHNO) && checkTotemAwake(TOTEM_ECSTASY);
+        return true;
     } else {
         return (PIRFront.hasMovement() || PIRBack.hasMovement());
     }
