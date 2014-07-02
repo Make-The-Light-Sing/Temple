@@ -5,8 +5,9 @@
 #include <Segment.h>
 #include "Config.h"
 #include "Totem.h"
+#include <Wire.h>
 
-//#define DEBUG
+#define DEBUG
 
 HCSR04UltraSonic HCSR04(TRIGGER_PIN, ECHO_PIN, 10000); // ==> Around 3m
 PIRSensor        PIRFront(PIR_FRONT_PIN, PIR_LOCK_DURATION);
@@ -14,6 +15,8 @@ PIRSensor        PIRBack(PIR_BACK_PIN, PIR_LOCK_DURATION);
 
 Totem<LEDSTRIP_PIN> totem;
 uint8_t configId;
+struct CRGB stripColor;
+
 
 /**
  * Init
@@ -23,6 +26,16 @@ void setup()
     configId = detectConfig(); 
     setConfig(configId);
     totem.init();
+    
+    uint8_t port = totem.getI2CPort();
+    if (port == 0) {
+        Wire.begin();
+    } else {
+        Wire.begin(port);
+        Wire.onRequest(onRequestHandler);
+    }
+    totem.setAwake();
+    stripColor = CGreen;
     
     #ifdef DEBUG
         Serial.begin(9600);
@@ -34,32 +47,40 @@ void setup()
  */
 void loop()
 {
-    // Init color structure
-    struct CRGB c;
-
-    // Read distance from Sensor
-    //int distance = HCSR04.readDistance();
-    int distance = HCSR04.timing() >> 4;
-    #ifdef DEBUG
-        Serial.println(distance);
-        if (PIRFront.triggered()) {
-            Serial.println("Movement in front sensor");
+    if (configId == TOTEM_PYRAMID) {
+        if (Wire.requestFrom(TOTEM_MOURNING, 3) == 3)
+        {
+            stripColor.r = Wire.read();
+            stripColor.g = Wire.read();
+            stripColor.b = Wire.read();
         }
-        if (PIRBack.triggered()) {
-            Serial.println("Movement in back sensor");
-        }
-    #endif
+        totem.setColor(stripColor);
+        totem.oneStep();
+    } else {    
+        // Read distance from Sensor
+        //int distance = HCSR04.readDistance();
+        int distance = HCSR04.timing() >> 4;
+        #ifdef DEBUG
+            Serial.println(distance);
+            if (PIRFront.triggered()) {
+                Serial.println("Movement in front sensor");
+            }
+            if (PIRBack.triggered()) {
+                Serial.println("Movement in back sensor");
+            }
+        #endif
+            
+        // Get CRGB value from index in an RGB wheel, index is the distance
+        stripColor.Wheel(distance);
         
-    // Get CRGB value from index in an RGB wheel, index is the distance
-    c.Wheel(distance);
-    
-    if (PIRFront.hasMovement() || PIRBack.hasMovement()) {
-        totem.setAwake();
-        totem.setColor(c);
-    } else {
-        totem.setSleeping();
+        if (PIRFront.hasMovement() || PIRBack.hasMovement()) {
+            totem.setAwake();
+            totem.setColor(stripColor);
+        } else {
+            totem.setSleeping();
+        }
+        totem.oneStep();
     }
-    totem.oneStep();
 }
 
 /**
@@ -118,8 +139,20 @@ void setConfig(uint8_t configId)
         case TOTEM_TECHNO:
             totem = Totem<LEDSTRIP_PIN>(config_techno);
             break;
+        case TOTEM_PYRAMID:
+            totem = Totem<LEDSTRIP_PIN>(config_pyramid);
+            break;
         case TOTEM_TEST:
         default:
             totem = Totem<LEDSTRIP_PIN>(config_test);
     }
+}
+
+/**
+ * When master make a resquest, send actual color
+ */
+void onRequestHandler()
+{
+    uint8_t buffer[3] = {stripColor.r, stripColor.g, stripColor.b};
+    Wire.write(buffer, 3);
 }
