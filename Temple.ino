@@ -5,7 +5,7 @@
 #include <Segment.h>
 #include "Config.h"
 #include "Totem.h"
-#include <Wire.h>
+//#include <Wire.h>
 
 //#define DEBUG
 
@@ -27,13 +27,13 @@ void setup()
     setConfig(configId);
     totem.init();
     
-    uint8_t port = totem.getI2CPort();
+/*    uint8_t port = totem.getI2CPort();
     if (port == 0) {
         Wire.begin();
     } else {
         Wire.begin(port);
         Wire.onRequest(onRequestHandler);
-    }
+    }*/
     totem.setAwake();
     stripColor = CGreen;
     
@@ -160,12 +160,12 @@ void setConfig(uint8_t configId)
 /**
  * When master make a resquest, send actual color
  */
-void onRequestHandler()
+/*void onRequestHandler()
 {
     //uint8_t buffer[1] = { PIRBack.hasMovement() ? 1 : 0 };
     uint8_t buffer[1] = { totem.isAwake() ? 1 : 0 };
-    Wire.write(buffer, 1);
-}
+//    Wire.write(buffer, 1);
+}*/
 
 /**
  * Check if given totem id is awake or not, using i2c channel
@@ -173,10 +173,10 @@ void onRequestHandler()
 boolean checkTotemAwake(int totemId)
 {
     boolean awake = false;
-    if (Wire.requestFrom(totemId, 1) == 1)
+/*    if (Wire.requestFrom(totemId, 1) == 1)
     {
         awake = (Wire.read() > 0);
-    }
+    }*/
     return awake;
 }
 
@@ -188,7 +188,7 @@ boolean getMovement()
     static int lastTotem = TOTEM_MOURNING;
     static int lastMovement = 0;
     if (configId == TOTEM_PYRAMID) {
-        switch(lastTotem) {
+        /*switch(lastTotem) {
             case TOTEM_MOURNING :
                 lastTotem = TOTEM_TECHNO;
                 break;
@@ -208,7 +208,8 @@ boolean getMovement()
         } else if (lastMovement > 0) {
             lastMovement --;
         }
-        return (lastMovement > 0);
+        return (lastMovement > 0);*/
+        return true;
             
         //return checkTotemAwake(TOTEM_TECHNO) && checkTotemAwake(TOTEM_ECSTASY);
         //return true;
