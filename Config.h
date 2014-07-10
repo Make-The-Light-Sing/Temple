@@ -54,10 +54,10 @@ T_TotemConfig config_test = {
  */
 #define TOTEM_MOURNING 31
 T_SegmentConfig config_mourning_on[4] = {
-    {0, 90, {CWhite, UP, Wave}},
-    {90, 90, {CWhite, DOWN, Wave}},
-    {180, 90, {CWhite, UP, Wave}},
-    {270, 90, {CWhite, DOWN, Wave}}
+    {0, 90, {CWhite, UP, Pulse}},
+    {90, 90, {CWhite, DOWN, Pulse}},
+    {180, 90, {CWhite, UP, Pulse}},
+    {270, 90, {CWhite, DOWN, Pulse}}
 };
 T_SegmentConfig config_mourning_off[4] = {
     {0, 90, {CWhite, UP, Spark}},
@@ -123,8 +123,8 @@ T_TotemConfig config_techno = {
  */
 #define TOTEM_MEDITATION 35
 T_SegmentConfig config_meditation_on[2] = {
-    {0, 90, {CWhite, DOWN, Wave}},
-    {90, 90, {CWhite, UP, Wave}}    
+    {0, 90, {CWhite, DOWN, Rainbow}},
+    {90, 90, {CWhite, UP, Rainbow}}    
 };
 T_SegmentConfig config_meditation_off[2] = {
     {0, 90, {CWhite, UP, Spark}},
@@ -153,9 +153,9 @@ T_TotemConfig config_meditation = {
  */
 #define TOTEM_ECSTASY    37
 T_SegmentConfig config_ecstasy_on[4] = {
-    {0, 93, {CWhite, DOWN, Wave}},
-    {93, 93, {CWhite, UP, Wave}},
-    {186, 105, {CWhite, DOWN, Wave}}
+    {0, 93, {CWhite, UP, Fire}},
+    {93, 105, {CWhite, DOWN, Fire}},
+    {198, 93, {CWhite, UP, Fire}}
 };
 T_SegmentConfig config_ecstasy_off[4] = {
     {0, 93, {CWhite, UP, Spark}},
@@ -183,14 +183,19 @@ T_TotemConfig config_ecstasy = {
  * Bridge : 38-39
  */
 #define TOTEM_PYRAMID    39
-T_SegmentConfig config_pyramid_on[1] = {
-    {0, 21, {CWhite, UP, Rainbow}}
+T_SegmentConfig config_pyramid_on[6] = {
+    {0, 100, {CRed, UP, Spark}},
+    {100, 100, {CRed, UP, Spark}},
+    {200, 100, {CRed, UP, Spark}},
+    {300, 100, {CRed, UP, Spark}},
+    {400, 100, {CRed, UP, Spark}},
+    {500, 100, {CRed, UP, Spark}}
 };
 T_SegmentConfig config_pyramid_off[1] = {
-    {0, 21, {CWhite, DOWN, Spark}}
+    {0, 600, {CWhite, DOWN, Spark}}
 };
 T_TotemConfig config_pyramid = {
-    .nb_leds = 21,
+    .nb_leds = 600,
     .config_on = {
         .size = 1,
         .delay = 10,
