@@ -21,9 +21,10 @@ typedef enum E_TOTEM_MODE {
 };
 
 typedef struct T_TotemConfig {
-    uint16_t nb_leds;
+    uint16_t                  nb_leds;
     T_SegmentCollectionConfig config_on;
     T_SegmentCollectionConfig config_off;
+    uint8_t                   i2c_port;
 };
 
 template <uint8_t DATA_PIN>
@@ -39,6 +40,7 @@ class Totem {
         E_TOTEM_MODE      mode = SLEEPING;
         SegmentCollection segments;
         SegmentCollection segmentsOff;
+        T_TotemConfig     _totemConfig;
         
         /* methods */
     public:
@@ -50,7 +52,7 @@ class Totem {
             segmentsOff.setLeds(leds);
         };
         Totem(T_TotemConfig config): 
-            nb_leds(config.nb_leds), config_on(config.config_on), config_off(config.config_off)
+            nb_leds(config.nb_leds), config_on(config.config_on), config_off(config.config_off), _totemConfig(config)
         {
             leds = (struct CRGB *) malloc(nb_leds * sizeof(struct CRGB));
             segments.setLeds(leds);
@@ -155,6 +157,14 @@ class Totem {
             LED.showRGB((unsigned char *) leds, nb_leds);
             getSegments().postStep();
             delay(getDelay());
+        };
+        
+        /**
+         * Return totem's i2c port
+         */
+        uint8_t getI2CPort()
+        {
+            return _totemConfig.i2c_port;
         };
 };  // class Totem
 
